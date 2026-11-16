@@ -1027,4 +1027,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String dayProgress(int done, int planned) {
     return '$done of $planned exercises';
   }
+
+  @override
+  String scaleChosen(int value, int max) {
+    return 'You chose $value of $max.';
+  }
+
+  @override
+  String get quickActions => 'More for today';
+
+  @override
+  String get recordPainHint => 'Pain, stiffness, sleep or mood – takes less than a minute.';
+
+  @override
+  String get questionnairesHint => 'Short check-ins about your back.';
+
+  @override
+  String get statExercises => 'exercises';
+
+  @override
+  String get statActiveDays => 'active days';
+
+  @override
+  String get statAveragePain => 'average pain';
+
+  @override
+  String get weekByWeek => 'Week by week';
+
+  @override
+  String get groupSettings => 'Settings';
+
+  @override
+  String get groupPrivacy => 'Privacy and data';
+
+  @override
+  String get groupSupport => 'Support';
 }

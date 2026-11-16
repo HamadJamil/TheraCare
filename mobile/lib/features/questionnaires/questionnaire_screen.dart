@@ -10,6 +10,7 @@ import '../../core/network/api_exception.dart';
 import '../../core/widgets/action_card.dart';
 import '../../core/widgets/app_buttons.dart';
 import '../../core/widgets/app_page.dart';
+import '../../core/widgets/labeled_progress.dart';
 import '../../core/widgets/state_views.dart';
 import '../../core/widgets/status_message.dart';
 import '../session/session_controller.dart';
@@ -131,10 +132,11 @@ class _QuestionnaireFlowState extends ConsumerState<_QuestionnaireFlow> {
         ],
       ),
       children: [
-        Semantics(
-          liveRegion: true,
-          child: Text(l10n.questionProgress(_index + 1, _questions.length), style: text.bodyMedium),
+        LabeledProgress(
+          label: l10n.questionProgress(_index + 1, _questions.length),
+          value: (_index + 1) / _questions.length,
         ),
+        const Gap(AppSpacing.md),
         const Gap(AppSpacing.sm),
         Semantics(header: true, child: Text(q.prompt, style: text.headlineSmall)),
         if (q.help != null) ...[const Gap(AppSpacing.sm), Text(q.help!, style: text.bodyMedium)],
