@@ -9,6 +9,7 @@ import '../../core/network/api_exception.dart';
 import '../../core/providers/core_providers.dart';
 import '../../core/widgets/app_buttons.dart';
 import '../../core/widgets/app_page.dart';
+import '../../core/widgets/labeled_progress.dart';
 import '../../core/widgets/state_views.dart';
 import '../../core/widgets/status_message.dart';
 import '../preferences/accessibility_settings.dart';
@@ -84,7 +85,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ],
       ),
       children: [
-        Semantics(liveRegion: true, child: Text(l10n.stepProgress(_step + 1, _steps), style: text.bodyMedium)),
+        LabeledProgress(label: l10n.stepProgress(_step + 1, _steps), value: (_step + 1) / _steps),
+        const Gap(AppSpacing.md),
         const Gap(AppSpacing.sm),
         Semantics(header: true, child: Text(title, style: text.headlineMedium)),
         const Gap(AppSpacing.md),

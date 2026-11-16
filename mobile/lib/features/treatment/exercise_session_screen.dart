@@ -11,6 +11,7 @@ import '../../core/network/api_exception.dart';
 import '../../core/widgets/app_buttons.dart';
 import '../../core/widgets/app_page.dart';
 import '../../core/widgets/choice_tile.dart';
+import '../../core/widgets/labeled_progress.dart';
 import '../../core/widgets/state_views.dart';
 import '../../core/widgets/status_message.dart';
 import '../progress/progress_repository.dart';
@@ -165,11 +166,29 @@ class _ExerciseSessionScreenState extends ConsumerState<ExerciseSessionScreen> {
         ],
       ),
       children: [
-        Semantics(liveRegion: true, child: Text(l10n.stepProgress(_step + 1, e.steps.length), style: text.bodyMedium)),
-        const Gap(AppSpacing.md),
+        LabeledProgress(label: l10n.stepProgress(_step + 1, e.steps.length), value: (_step + 1) / e.steps.length),
+        const Gap(AppSpacing.lg),
         if (_paused) ...[StatusMessage(kind: StatusKind.info, text: l10n.pausedInfo), const Gap(AppSpacing.md)],
-        Text(e.steps[_step], style: text.headlineSmall),
-        const Gap(AppSpacing.xl),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ExcludeSemantics(
+                  child: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Text('${_step + 1}', style: text.headlineSmall?.copyWith(color: Colors.white)),
+                  ),
+                ),
+                const Gap(AppSpacing.md),
+                Text(e.steps[_step], style: text.headlineSmall),
+              ],
+            ),
+          ),
+        ),
+        const Gap(AppSpacing.lg),
         StatusMessage(kind: StatusKind.warning, text: e.safetyNotes.first),
       ],
     );

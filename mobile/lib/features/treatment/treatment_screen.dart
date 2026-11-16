@@ -8,6 +8,7 @@ import '../../core/l10n/l10n.dart';
 import '../../core/widgets/action_card.dart';
 import '../../core/widgets/app_buttons.dart';
 import '../../core/widgets/app_page.dart';
+import '../../core/widgets/labeled_progress.dart';
 import '../../core/widgets/async_value_view.dart';
 import '../../core/widgets/state_views.dart';
 import 'treatment_repository.dart';
@@ -32,7 +33,8 @@ class TreatmentScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(t.planTitle, style: text.headlineMedium),
-                Text(l10n.weekOf(t.week, t.totalWeeks), style: text.bodyLarge),
+                const Gap(AppSpacing.md),
+                LabeledProgress(label: l10n.weekOf(t.week, t.totalWeeks), value: t.week / t.totalWeeks),
                 SectionTitle(l10n.goals),
                 for (final o in t.objectives)
                   Padding(
@@ -40,7 +42,10 @@ class TreatmentScreen extends ConsumerWidget {
                     child: Text('• $o', style: text.bodyLarge),
                   ),
                 SectionTitle(l10n.todaysExercises),
-                Text(l10n.todayProgress(t.doneToday, t.today.length), style: text.bodyMedium),
+                LabeledProgress(
+                  label: l10n.todayProgress(t.doneToday, t.today.length),
+                  value: t.today.isEmpty ? 0 : t.doneToday / t.today.length,
+                ),
                 const Gap(AppSpacing.md),
                 for (final e in t.today) ...[
                   ActionCard(
