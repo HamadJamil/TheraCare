@@ -13,7 +13,9 @@ void main() {
     expect(scaler, const ScaledTextScaler(TextScaler.linear(1.5), 1.6));
   });
 
-  testWidgets('starts on the welcome screen when signed out', (tester) async {
+  testWidgets('starts on the welcome screen in the device language', (tester) async {
+    tester.platformDispatcher.localeTestValue = const Locale('de', 'DE');
+    addTearDown(tester.platformDispatcher.clearLocaleTestValue);
     await tester.runAsync(() async {
       await tester.pumpWidget(
         ProviderScope(

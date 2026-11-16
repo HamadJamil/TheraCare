@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart' show Locale, WidgetsBinding;
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,9 +20,11 @@ final tokenStoreProvider = Provider<TokenStore>((ref) => SecureTokenStore());
 /// Current UI language code, kept in sync by the app widget.
 final localeCodeProvider = NotifierProvider<LocaleCode, String>(LocaleCode.new);
 
+/// Starts with the device language (English or German, German otherwise);
+/// after sign-in the profile's preferred language takes over.
 class LocaleCode extends Notifier<String> {
   @override
-  String build() => 'de';
+  String build() => deviceLanguage(WidgetsBinding.instance.platformDispatcher.locale);
   void set(String code) => state = code;
 }
 
@@ -72,3 +76,5 @@ final connectivityProvider = StreamProvider<bool>((ref) async* {
     yield isOnline;
   }
 });
+
+String deviceLanguage(Locale locale) => locale.languageCode == 'en' ? 'en' : 'de';
