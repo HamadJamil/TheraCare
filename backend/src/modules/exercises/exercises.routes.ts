@@ -1,22 +1,12 @@
 import { Router } from 'express';
-import { z } from 'zod';
 import { ok } from '../../common/http';
 import { localeOf } from '../../common/locale';
-import { clientId, idParams } from '../../common/schemas';
+import { idParams } from '../../common/schemas';
 import { parse } from '../../common/validation';
 import { authenticate, authOf } from '../../middleware/authenticate';
 import { requireTreatmentAccess } from '../../middleware/treatment-access';
 import * as exercises from './exercises.service';
-
-export const completionSchema = z
-  .object({
-    clientId,
-    sessionId: z.string().uuid().optional(),
-    startedAt: z.coerce.date(),
-    completedAt: z.coerce.date(),
-    perceivedDifficulty: z.number().int().min(1).max(5).optional(),
-  })
-  .strict();
+import { completionSchema } from './exercises.schemas';
 
 export const exercisesRouter = Router();
 exercisesRouter.use(authenticate, requireTreatmentAccess);
