@@ -66,7 +66,7 @@ class _CloseAccountScreenState extends ConsumerState<CloseAccountScreen> {
         Text(l10n.closeAccountExportHint, style: Theme.of(context).textTheme.bodyLarge),
         const Gap(AppSpacing.lg),
         if (_error != null) ...[ErrorView(error: _error!), const Gap(AppSpacing.md)],
-        AppTextField(label: l10n.password, controller: _password, obscure: true),
+        AppTextField(label: l10n.password, controller: _password, obscure: true, onChanged: (_) => setState(() {})),
         const Gap(AppSpacing.md),
         ChoiceTile(
           label: l10n.closeAccountConfirm,
