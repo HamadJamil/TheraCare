@@ -18,6 +18,8 @@ const schema = z.object({
   RATE_LIMIT_WINDOW_SECONDS: z.coerce.number().int().positive().default(900),
   RATE_LIMIT_AUTH_MAX: z.coerce.number().int().positive().default(20),
   RATE_LIMIT_ACTIVATION_MAX: z.coerce.number().int().positive().default(10),
+  /** Days after account closure before identity data is anonymised (demo default). */
+  CLOSED_ACCOUNT_RETENTION_DAYS: z.coerce.number().int().min(0).default(30),
   STORAGE_DIR: z.string().default('./storage'),
   /** 64 hex chars (32 bytes) used to encrypt generated files at rest. */
   FILE_ENCRYPTION_KEY: z.string().regex(/^[0-9a-f]{64}$/i, 'must be 64 hex characters'),
