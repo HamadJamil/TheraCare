@@ -312,5 +312,16 @@
   "exerciseSavedTitle": "Übung gespeichert",
   "exerciseSavedBody": "Ihre Übung ist gespeichert. Wenn Sie offline sind, wird sie später automatisch gesendet.",
   "schedule": "Wochenplan",
-  "dayProgress": "{done} von {planned} Übungen"
+  "dayProgress": "{done} von {planned} Übungen",
+  "scaleChosen": "Sie haben {value} von {max} gewählt.",
+  "quickActions": "Mehr für heute",
+  "recordPainHint": "Schmerz, Steifheit, Schlaf oder Stimmung – dauert weniger als eine Minute.",
+  "questionnairesHint": "Kurze Fragen zu Ihrem Rücken.",
+  "statExercises": "Übungen",
+  "statActiveDays": "aktive Tage",
+  "statAveragePain": "Ø Schmerz",
+  "weekByWeek": "Woche für Woche",
+  "groupSettings": "Einstellungen",
+  "groupPrivacy": "Datenschutz und Daten",
+  "groupSupport": "Unterstützung"
 }

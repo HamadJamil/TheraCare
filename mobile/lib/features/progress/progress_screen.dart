@@ -7,6 +7,7 @@ import '../../core/widgets/action_card.dart';
 import '../../core/widgets/app_buttons.dart';
 import '../../core/widgets/app_page.dart';
 import '../../core/widgets/async_value_view.dart';
+import '../../core/widgets/stat_tile.dart';
 import '../reports/export_card.dart';
 import '../reports/reports_repository.dart';
 import 'progress_repository.dart';
@@ -36,20 +37,41 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
           data: (weeks) => Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              SectionTitle(l10n.thisWeek),
+              StatRow(
+                children: [
+                  StatTile(
+                    icon: Icons.fitness_center,
+                    value: '${weeks.last.exercisesCompleted}',
+                    label: l10n.statExercises,
+                  ),
+                  StatTile(icon: Icons.calendar_today, value: '${weeks.last.activeDays}', label: l10n.statActiveDays),
+                  StatTile(
+                    icon: Icons.monitor_heart_outlined,
+                    value: weeks.last.painAverage?.toString() ?? '–',
+                    label: l10n.statAveragePain,
+                  ),
+                ],
+              ),
               SectionTitle(l10n.lastFourWeeks),
-              for (final w in weeks.reversed)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: Text(w.text, style: text.bodyLarge),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: _asTable ? WeeklyTable(weeks: weeks) : WeeklyChart(weeks: weeks),
                 ),
-              const Gap(AppSpacing.md),
-              if (_asTable) WeeklyTable(weeks: weeks) else WeeklyChart(weeks: weeks),
+              ),
               const Gap(AppSpacing.sm),
               SecondaryButton(
                 label: _asTable ? l10n.showAsChart : l10n.showAsTable,
                 icon: _asTable ? Icons.bar_chart : Icons.table_rows_outlined,
                 onPressed: () => setState(() => _asTable = !_asTable),
               ),
+              SectionTitle(l10n.weekByWeek),
+              for (final w in weeks.reversed)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Text(w.text, style: text.bodyLarge),
+                ),
             ],
           ),
         ),
