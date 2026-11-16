@@ -1,0 +1,532 @@
+{
+  "@@locale": "en",
+  "activationTitle": "Activate TheraCare",
+  "activationBody": "Your health insurer gave you a 12-character activation code. Enter it to unlock your therapy.",
+  "activationCode": "Activation code",
+  "activationCodeHelp": "For example ABCD-EFGH-JKLM. You can paste it. Upper or lower case does not matter.",
+  "activationCodeLength": "The code has 12 letters and numbers. Please check it.",
+  "activate": "Activate",
+  "privacyTitle": "Your privacy",
+  "privacyIntro": "Before you start, please read what happens with your data. You decide about each point separately.",
+  "consentRequired": "Needed for the therapy",
+  "consentOptional": "Optional – your therapy works without it",
+  "readDetails": "Read the details",
+  "consentAgree": "I have read this and I agree",
+  "consentYesOptional": "Yes, I allow this",
+  "consentNoOptional": "No, thank you",
+  "privacyRequiredHint": "To use the therapy, please agree to the points marked \"Needed for the therapy\".",
+  "saveMyChoices": "Save my choices",
+  "createAccount": "Create account",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "welcomeTitle": "Your back, step by step",
+  "welcomeBody": "TheraCare guides you through gentle exercises and helps you keep track of how your back feels. Everything is explained in plain language.",
+  "email": "Email address",
+  "emailHelp": "We send you a confirmation code to this address.",
+  "password": "Password",
+  "passwordRules": "At least 10 characters. A short sentence is easy to remember.",
+  "firstName": "First name",
+  "lastName": "Last name",
+  "forgotPassword": "Forgot password?",
+  "noAccountYet": "No account yet? Create one",
+  "haveAccount": "Already have an account? Sign in",
+  "registerIntro": "We only ask for what is needed to set up your account.",
+  "validationEmail": "Enter a valid email address, for example name@example.com.",
+  "validationPassword": "Use at least 10 characters.",
+  "validationRequired": "Please fill in this field.",
+  "validationCode": "Enter the 6-digit code from the email.",
+  "verifyTitle": "Confirm your email",
+  "verifyBody": "We sent a 6-digit code to your email address. Enter it below. The code is valid for 30 minutes.",
+  "verificationCode": "Confirmation code",
+  "verificationCodeHelp": "6 digits, for example 123456",
+  "confirmEmail": "Confirm email",
+  "sendNewCode": "Send a new code",
+  "codeResent": "If the address can be used, a new code is on its way.",
+  "forgotPasswordBody": "Enter your email address. We will send you a code to choose a new password.",
+  "sendResetCode": "Send reset code",
+  "resetPassword": "Choose a new password",
+  "resetPasswordBody": "Enter the code from the email and your new password. For your safety you will be signed out on all devices.",
+  "resetCode": "Reset code",
+  "resetCodeHelp": "12 characters, for example ABCD-EFGH-JKLM",
+  "newPassword": "New password",
+  "saveNewPassword": "Save new password",
+  "passwordChanged": "Your password has been changed. Please sign in with your new password.",
+  "appName": "TheraCare",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "loading": "Loading…",
+  "errorTitle": "Something did not work",
+  "tryAgain": "Try again",
+  "scaleValue": "{value} of {max}",
+  "@scaleValue": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "errorGeneric": "Something went wrong. Your saved data is safe. Please try again.",
+  "errorNetwork": "No internet connection. Your entries are kept on this device and sent later.",
+  "errorInvalidCredentials": "The email address or password is not correct.",
+  "errorEmailNotVerified": "Please confirm your email address. We sent you a new code.",
+  "errorInvalidCode": "This code is not correct or has expired. You can request a new code.",
+  "errorRateLimited": "Too many attempts. Please wait a few minutes and try again.",
+  "errorActivationInvalid": "This code is not valid. Please check each character and try again.",
+  "errorActivationUsed": "This code has already been used. Please contact your health insurer for a new code.",
+  "errorActivationExpired": "This code has expired. Please ask your health insurer for a new code.",
+  "errorActivationRevoked": "This code is no longer valid. Please contact your health insurer.",
+  "errorActivationWrongProduct": "This code belongs to a different app.",
+  "errorAlreadyActivated": "TheraCare is already activated for your account.",
+  "errorEntitlementRequired": "Please activate TheraCare with your activation code first.",
+  "errorConsentRequired": "Treatment is paused because a required consent is missing. You can review your privacy choices.",
+  "errorAlreadySubmitted": "You have already answered this questionnaire.",
+  "errorReportNotReady": "The file is still being prepared. Please try again in a moment.",
+  "errorValidation": "Please check the highlighted fields.",
+  "errorSessionExpired": "Please sign in again. Your saved entries are kept.",
+  "reviewPrivacy": "Review privacy choices",
+  "demoNotice": "Demo project – not an approved medical device.",
+  "pendingEntries": "{count, plural, =1{1 entry is saved on this device and will be sent when you are online.} other{{count} entries are saved on this device and will be sent when you are online.}}",
+  "@pendingEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sendNow": "Send now",
+  "help": "Help",
+  "back": "Back",
+  "next": "Next",
+  "cancel": "Cancel",
+  "save": "Save",
+  "close": "Close",
+  "done": "Done",
+  "notDone": "Not done yet",
+  "yes": "Yes",
+  "no": "No",
+  "homeTitle": "Today",
+  "greeting": "Hello {name}",
+  "@greeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todayProgress": "Today you have done {done} of {planned} exercises.",
+  "@todayProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      }
+    }
+  },
+  "nextStep": "Your next step",
+  "nextExerciseHint": "A short exercise from your plan.",
+  "nextQuestionnaireHint": "A few short questions.",
+  "startTodaysExercise": "Start today's exercise",
+  "answerQuestionnaire": "Answer the questions",
+  "allDoneTitle": "Well done",
+  "allDoneBody": "You have finished everything for today. You can rest or record how your back feels.",
+  "thisWeek": "This week",
+  "recordPain": "Record how my back feels",
+  "finalCheckTitle": "Your therapy period has ended",
+  "finalCheckBody": "Please answer the final back check. It takes about 5 minutes.",
+  "openQuestionnaires": "Open questionnaires",
+  "therapyCompletedTitle": "Therapy completed",
+  "therapyCompletedBody": "Thank you for taking part. Your summary is ready.",
+  "viewMyReport": "View my summary",
+  "navHome": "Today",
+  "navPlan": "Plan",
+  "navRecord": "Record",
+  "navProgress": "Progress",
+  "navProfile": "Profile",
+  "offlineBanner": "You are offline. You can keep using TheraCare – entries are saved on this device.",
+  "startupFailed": "TheraCare could not start. Please check your connection and try again.",
+  "gettingStarted": "Getting started",
+  "stepProgress": "Step {current} of {total}",
+  "@stepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "continueLabel": "Continue",
+  "onboardingIntroTitle": "What to expect",
+  "onboardingPoint1": "Your therapy lasts 12 weeks.",
+  "onboardingPoint2": "Each day takes about 10 to 15 minutes.",
+  "onboardingPoint3": "You note how your back feels. This helps you see your progress.",
+  "importantTitle": "Important",
+  "onboardingSafety": "TheraCare does not replace your doctor and cannot help in an emergency. If you have sudden severe pain, numbness or problems with bladder or bowel, call 112.",
+  "onboardingSettingsTitle": "Make it comfortable",
+  "onboardingSettingsBody": "Choose what is easiest for you to read. You can change this later in your profile.",
+  "onboardingCheckTitle": "Your starting back check",
+  "onboardingCheckBody": "Answer 7 short questions about your back. There are no wrong answers and there is no time limit. Your answers are saved after each question.",
+  "startQuestions": "Start the questions",
+  "textSize": "Text size",
+  "textSizeHelp": "This works together with the text size of your phone.",
+  "textSizeNormal": "Normal",
+  "textSizeLarge": "Large",
+  "textSizeExtraLarge": "Extra large",
+  "display": "Display",
+  "highContrast": "Stronger contrast",
+  "highContrastHelp": "Darker text and clearer borders.",
+  "reducedMotion": "Less movement",
+  "reducedMotionHelp": "Turns off animations between screens.",
+  "stateOn": "Currently on",
+  "stateOff": "Currently off",
+  "profileTitle": "Profile",
+  "personalData": "Personal data",
+  "accessibilityTitle": "Text size and display",
+  "accessibilityIntro": "Changes apply immediately on all screens.",
+  "remindersTitle": "Reminders",
+  "privacySettingsTitle": "Privacy and consent",
+  "exportTitle": "Export my data",
+  "sessionsTitle": "Signed-in devices",
+  "closeAccountTitle": "Close my account",
+  "language": "Language",
+  "emailChangeInfo": "To change your email address, please contact support.",
+  "accountStatus": "Account status",
+  "accountStatusValue": "{status}",
+  "@accountStatusValue": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "saveChanges": "Save changes",
+  "changesSaved": "Your changes are saved.",
+  "remindersIntro": "A daily reminder can help you keep your routine. It is optional.",
+  "dailyReminder": "Daily reminder",
+  "reminderAt": "Reminder at {time}",
+  "@reminderAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "changeTime": "Change time",
+  "quietHoursInfo": "No reminders between {start} and {end}.",
+  "@quietHoursInfo": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderPrivacy": "Reminders only say \"You have a new task for today\". They never mention your health.",
+  "exportIntro": "You can download your data at any time. You decide where the file goes.",
+  "fhirExport": "Machine-readable export (FHIR)",
+  "fhirExportBody": "A standard health data file (HL7 FHIR R4) that other systems can read. For people, the PDF summary is easier to read.",
+  "createExport": "Create export",
+  "withdrawTitle": "Withdraw consent: {name}?",
+  "@withdrawTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "withdrawRequiredWarning": "Without this consent your therapy is paused. Records already saved are kept as the law requires. You can give consent again at any time.",
+  "withdrawOptionalInfo": "Your therapy is not affected.",
+  "withdrawRequiredDone": "Consent withdrawn. Your therapy is paused until you give consent again.",
+  "keepConsent": "Keep my consent",
+  "withdraw": "Withdraw",
+  "giveConsent": "Give consent: {name}",
+  "@giveConsent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "consentGiven": "Thank you. Your consent is saved.",
+  "consentHistory": "History of my decisions",
+  "decisionOn": "{decision} on {date}",
+  "@decisionOn": {
+    "placeholders": {
+      "decision": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "decisionGranted": "Agreed",
+  "decisionDeclined": "Declined",
+  "decisionWithdrawn": "Withdrawn",
+  "policyVersion": "version {version}",
+  "@policyVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsIntro": "These devices are signed in to your account. You can sign out devices you do not recognise.",
+  "unknownDevice": "Unknown device",
+  "lastUsed": "Last used: {date}",
+  "@lastUsed": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "thisDevice": "This device",
+  "signOutDevice": "Sign out",
+  "closeAccountWarningTitle": "Please read carefully",
+  "closeAccountWarning": "You will no longer be able to sign in. Your therapy ends. Treatment records are kept only as long as the law requires and are then deleted or anonymised.",
+  "closeAccountExportHint": "Tip: export your data first if you want to keep a copy.",
+  "closeAccountConfirm": "I understand and want to close my account",
+  "closeAccountButton": "Close my account now",
+  "progressTitle": "Progress",
+  "lastFourWeeks": "The last 4 weeks",
+  "chartTitle": "Exercises per week",
+  "showAsTable": "Show as table",
+  "showAsChart": "Show as chart",
+  "weekStarting": "Week starting",
+  "exercisesColumn": "Exercises",
+  "painAverageColumn": "Average pain (0–10)",
+  "backCheck": "Back check",
+  "backCheckStart": "At the start: {score} points",
+  "@backCheckStart": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "backCheckEnd": "At the end: {score} points",
+  "@backCheckEnd": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "backCheckScale": "Scale 0 to 34. Lower numbers mean fewer difficulties. This is not a diagnosis.",
+  "summaryReport": "Summary of my therapy (PDF)",
+  "summaryReportBody": "A readable document with your exercises, pain entries and back check results. You can share it with your doctor.",
+  "createSummary": "Create summary",
+  "exportConfirm": "The file contains your personal health information. It is saved on this phone and you choose where to share it. Nothing is sent to anyone automatically.",
+  "createFile": "Create file",
+  "preparingFile": "Preparing your file. This can take a moment.",
+  "fileReady": "Your file is ready.",
+  "questionnaire": "Questionnaire",
+  "questionnaires": "Questionnaires",
+  "questionProgress": "Question {current} of {total}",
+  "@questionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "answerRequired": "An answer is needed.",
+  "answerOptional": "This question is optional.",
+  "pleaseAnswer": "Please choose an answer to continue.",
+  "reviewAnswers": "Check your answers",
+  "reviewAnswersBody": "Please check your answers. You can still change them.",
+  "submitAnswers": "Send my answers",
+  "change": "Change",
+  "notAnswered": "Not answered",
+  "yourAnswer": "Your answer",
+  "noDateChosen": "No date chosen yet",
+  "chooseDate": "Choose a date",
+  "thankYou": "Thank you",
+  "answersSaved": "Your answers are saved",
+  "baselineDone": "Your personal exercise plan is ready. You can start today.",
+  "finalDone": "You have completed your therapy. You can now view your summary.",
+  "checkInDone": "Thank you for your weekly check-in.",
+  "scoreInfo": "Your back check result: {score} of 34 points. Lower numbers mean fewer difficulties.",
+  "@scoreInfo": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "scoreNotDiagnosis": "This number is not a diagnosis. It only helps to choose your exercise plan and show your progress.",
+  "goToHome": "Go to my overview",
+  "noQuestionnaires": "There are no questionnaires for you right now.",
+  "questionCount": "{count, plural, =1{1 question} other{{count} questions}}",
+  "@questionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statusSubmitted": "Status: answered",
+  "statusDraft": "Status: started – you can continue",
+  "statusNotStarted": "Status: not started",
+  "emergencyTitle": "In an emergency",
+  "emergencyBody": "TheraCare cannot help in an emergency. Call 112 for urgent medical help.",
+  "faqTitle": "Frequently asked questions",
+  "contactTitle": "Contact support",
+  "contactBody": "Our support team helps with technical questions. They cannot see your health data.",
+  "contactSignedOut": "Please sign in to write to our support team. You can also email support@theracare.example.",
+  "writeToSupport": "Write to support",
+  "ticketStatus": "Status: {status}",
+  "@ticketStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "supportPrivacyNote": "Please do not include passwords, activation codes or health details. We will never ask for them.",
+  "topic": "Topic",
+  "categoryLogin": "Signing in",
+  "categoryActivation": "Activation code",
+  "categoryExercises": "Exercises",
+  "categorySync": "Saving and sending entries",
+  "categoryPrivacy": "Privacy",
+  "categoryAccessibility": "Reading and using the app",
+  "categoryOther": "Something else",
+  "subject": "Subject",
+  "message": "Your message",
+  "subjectTooShort": "Please write a short subject.",
+  "messageTooShort": "Please describe the problem in a few words.",
+  "sendMessage": "Send message",
+  "messageSentTitle": "Message sent",
+  "messageSentBody": "Thank you. We will reply by email.",
+  "trackTitle": "Record",
+  "whatToRecord": "What would you like to record?",
+  "howStrongNow": "{name}: how is it right now?",
+  "@howStrongNow": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseAValue": "Please choose a number first.",
+  "noteOptional": "Note (optional)",
+  "noteHelp": "For example what you did before. Please do not report emergencies here.",
+  "saveEntry": "Save entry",
+  "entrySaved": "Your entry is saved.",
+  "viewHistory": "View my entries",
+  "history": "My entries",
+  "noEntriesYet": "You have not recorded anything yet. Your entries will appear here.",
+  "correct": "Correct",
+  "correctEntry": "Correct this entry",
+  "correctEntryBody": "You entered {value}. The original entry is kept for your records.",
+  "@correctEntryBody": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "correctionReason": "Why are you correcting it?",
+  "saveCorrection": "Save correction",
+  "myPlan": "My plan",
+  "noPlanYet": "You do not have an exercise plan yet. It is created after your starting back check.",
+  "weekOf": "Week {week} of {weeks}",
+  "@weekOf": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      },
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "goals": "Goals",
+  "todaysExercises": "Today's exercises",
+  "aboutMinutes": "About {minutes} min",
+  "@aboutMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "viewSchedule": "View my weekly schedule",
+  "planVersion": "Plan version {value}",
+  "@planVersion": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "exercise": "Exercise",
+  "startExercise": "Start exercise",
+  "safetyFirst": "Safety first",
+  "howItWorks": "How it works",
+  "stepText": "Step {value}: {text}",
+  "@stepText": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "transcript": "Read the full text",
+  "contentVersion": "Content version {value}",
+  "@contentVersion": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "stopExercise": "Stop",
+  "stopExerciseTitle": "Stop this exercise?",
+  "stopExerciseBody": "That is fine. Nothing will be saved for this exercise. Stop if you feel pain.",
+  "continueExercise": "Continue exercise",
+  "pause": "Pause",
+  "resume": "Resume",
+  "pausedInfo": "Paused. Take your time.",
+  "nextStepButton": "Next step",
+  "finishExercise": "I have finished",
+  "howWasIt": "How was it?",
+  "howWasItBody": "Choose how hard the exercise felt. This is optional.",
+  "effort1": "Very easy",
+  "effort2": "Easy",
+  "effort3": "Just right",
+  "effort4": "Hard",
+  "effort5": "Too hard",
+  "saveExercise": "Save exercise",
+  "wellDone": "Well done",
+  "exerciseSavedTitle": "Exercise saved",
+  "exerciseSavedBody": "Your exercise is saved. If you are offline, it will be sent automatically later.",
+  "schedule": "Weekly schedule",
+  "dayProgress": "{done} of {planned} exercises",
+  "@dayProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      }
+    }
+  }
+}

@@ -1,0 +1,762 @@
+// TheraCare database schema.
+// Rules: UUID keys, UTC timestamps, no cascading deletes of clinical records,
+// published medical content is immutable (changes create a new version).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────────────────────── Enums ─────────────────────────────
+
+enum AccountStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum Role {
+  PATIENT
+  SUPPORT_AGENT
+  CONTENT_AUTHOR
+  CLINICAL_REVIEWER
+  ADMIN
+  SECURITY_AUDITOR
+}
+
+/// Patient journey. Kept as explicit domain states, never collapsed into booleans.
+enum JourneyState {
+  ACCOUNT_PENDING_VERIFICATION
+  ENTITLEMENT_PENDING
+  ENTITLEMENT_ACTIVE
+  PRIVACY_COMPLETE
+  ONBOARDING_IN_PROGRESS
+  BASELINE_ASSESSMENT_COMPLETE
+  TREATMENT_ACTIVE
+  FINAL_ASSESSMENT
+  TREATMENT_COMPLETED
+  ACCOUNT_CLOSED
+}
+
+enum ActivationStatus {
+  UNUSED
+  REDEEMED
+  EXPIRED
+  REVOKED
+}
+
+enum EntitlementStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+enum ConsentDecision {
+  GRANTED
+  DECLINED
+  WITHDRAWN
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  PUBLISHED
+  REJECTED
+  RETIRED
+}
+
+enum QuestionnairePurpose {
+  BASELINE
+  ROUTINE
+  FINAL
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTI_CHOICE
+  YES_NO
+  NUMERIC
+  DATE
+  SHORT_TEXT
+  LONG_TEXT
+  LIKERT
+}
+
+enum ResponseStatus {
+  DRAFT
+  SUBMITTED
+}
+
+enum PatientTreatmentStatus {
+  ACTIVE
+  AWAITING_FINAL_ASSESSMENT
+  COMPLETED
+  ENDED
+}
+
+enum SessionStatus {
+  IN_PROGRESS
+  PAUSED
+  COMPLETED
+  ABANDONED
+}
+
+enum ObservationKind {
+  PAIN_INTENSITY
+  STIFFNESS
+  SLEEP_QUALITY
+  MOOD
+}
+
+enum ObservationStatus {
+  CURRENT
+  CORRECTED
+}
+
+enum NotificationStatus {
+  SCHEDULED
+  SENT
+  FAILED
+  CANCELLED
+}
+
+enum SyncEventStatus {
+  ACCEPTED
+  REJECTED
+}
+
+enum ReportKind {
+  TREATMENT_SUMMARY_PDF
+  FHIR_BUNDLE
+}
+
+enum ReportStatus {
+  PENDING
+  READY
+  FAILED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum ReviewAction {
+  SUBMITTED
+  APPROVED
+  REJECTED
+  PUBLISHED
+  RETIRED
+}
+
+enum ContentResource {
+  EXERCISE_VERSION
+  TREATMENT_VERSION
+  QUESTIONNAIRE
+}
+
+enum AuditOutcome {
+  SUCCESS
+  FAILURE
+}
+
+// ───────────────────────────── Identity ─────────────────────────────
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  email        String        @unique
+  passwordHash String
+  status       AccountStatus @default(PENDING_VERIFICATION)
+  role         Role          @default(PATIENT)
+  journeyState JourneyState  @default(ACCOUNT_PENDING_VERIFICATION)
+  closedAt     DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  profile            PatientProfile?
+  preferences        PatientPreferences?
+  sessions           UserSession[]
+  emailVerifications EmailVerification[]
+  passwordResets     PasswordReset[]
+  activations        Activation[]
+  entitlements       Entitlement[]
+  consents           Consent[]
+  consentEvents      ConsentEvent[]
+  assessments        Assessment[]
+  responses          QuestionnaireResponse[]
+  treatments         PatientTreatment[]
+  treatmentSessions  TreatmentSession[]
+  completions        ExerciseCompletion[]
+  observations       Observation[]
+  notifications      Notification[]
+  syncEvents         SyncEvent[]
+  reports            Report[]
+  tickets            SupportTicket[]
+
+  @@map("users")
+}
+
+model UserSession {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @db.Uuid
+  familyId         String    @db.Uuid
+  refreshTokenHash String    @unique
+  deviceLabel      String?
+  createdAt        DateTime  @default(now())
+  lastUsedAt       DateTime  @default(now())
+  expiresAt        DateTime
+  rotatedAt        DateTime?
+  revokedAt        DateTime?
+  revokeReason     String?
+  user             User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, revokedAt])
+  @@index([familyId])
+  @@map("user_sessions")
+}
+
+model EmailVerification {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @db.Uuid
+  /// Set when the challenge confirms a change of email address.
+  newEmail   String?
+  codeHash   String
+  attempts   Int       @default(0)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, consumedAt])
+  @@map("email_verifications")
+}
+
+model PasswordReset {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@map("password_resets")
+}
+
+// ───────────────────────────── Patient ─────────────────────────────
+
+model PatientProfile {
+  id                String    @id @default(uuid()) @db.Uuid
+  userId            String    @unique @db.Uuid
+  firstName         String
+  lastName          String
+  dateOfBirth       DateTime? @db.Date
+  preferredLanguage String    @default("de")
+  timezone          String    @default("Europe/Berlin")
+  updatedAt         DateTime  @updatedAt
+  user              User      @relation(fields: [userId], references: [id])
+
+  @@map("patient_profiles")
+}
+
+model PatientPreferences {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @unique @db.Uuid
+  textScale        Float    @default(1.0)
+  highContrast     Boolean  @default(false)
+  reducedMotion    Boolean  @default(false)
+  remindersEnabled Boolean  @default(false)
+  reminderTime     String   @default("09:00")
+  quietHoursStart  String   @default("21:00")
+  quietHoursEnd    String   @default("08:00")
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id])
+
+  @@map("patient_preferences")
+}
+
+// ───────────────────────────── Product & activation ─────────────────────────────
+
+model DigaProduct {
+  id           String   @id @default(uuid()) @db.Uuid
+  code         String   @unique
+  name         String
+  durationDays Int
+  createdAt    DateTime @default(now())
+
+  activations    Activation[]
+  entitlements   Entitlement[]
+  treatmentPlans TreatmentPlan[]
+
+  @@map("diga_products")
+}
+
+model Activation {
+  id          String           @id @default(uuid()) @db.Uuid
+  codeHash    String           @unique
+  productId   String           @db.Uuid
+  userId      String?          @db.Uuid
+  status      ActivationStatus @default(UNUSED)
+  expiresAt   DateTime
+  redeemedAt  DateTime?
+  createdAt   DateTime         @default(now())
+  product     DigaProduct      @relation(fields: [productId], references: [id])
+  user        User?            @relation(fields: [userId], references: [id])
+  entitlement Entitlement?
+
+  @@index([status, expiresAt])
+  @@map("activations")
+}
+
+model Entitlement {
+  id           String            @id @default(uuid()) @db.Uuid
+  userId       String            @db.Uuid
+  productId    String            @db.Uuid
+  activationId String            @unique @db.Uuid
+  status       EntitlementStatus @default(ACTIVE)
+  startsAt     DateTime
+  endsAt       DateTime
+  createdAt    DateTime          @default(now())
+  user         User              @relation(fields: [userId], references: [id])
+  product      DigaProduct       @relation(fields: [productId], references: [id])
+  activation   Activation        @relation(fields: [activationId], references: [id])
+
+  @@index([userId, status])
+  @@map("entitlements")
+}
+
+// ───────────────────────────── Privacy ─────────────────────────────
+
+model ConsentType {
+  id            String   @id @default(uuid()) @db.Uuid
+  key           String
+  policyVersion String
+  required      Boolean
+  title         Json
+  summary       Json
+  details       Json
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  consents Consent[]
+
+  @@unique([key, policyVersion])
+  @@map("consent_types")
+}
+
+/// Current decision per user and consent type. History lives in ConsentEvent.
+model Consent {
+  id            String          @id @default(uuid()) @db.Uuid
+  userId        String          @db.Uuid
+  consentTypeId String          @db.Uuid
+  policyVersion String
+  decision      ConsentDecision
+  decidedAt     DateTime        @default(now())
+  user          User            @relation(fields: [userId], references: [id])
+  consentType   ConsentType     @relation(fields: [consentTypeId], references: [id])
+  events        ConsentEvent[]
+
+  @@unique([userId, consentTypeId])
+  @@map("consents")
+}
+
+model ConsentEvent {
+  id            String          @id @default(uuid()) @db.Uuid
+  consentId     String          @db.Uuid
+  userId        String          @db.Uuid
+  decision      ConsentDecision
+  policyVersion String
+  locale        String
+  appVersion    String?
+  occurredAt    DateTime        @default(now())
+  consent       Consent         @relation(fields: [consentId], references: [id])
+  user          User            @relation(fields: [userId], references: [id])
+
+  @@index([userId, occurredAt])
+  @@map("consent_events")
+}
+
+// ───────────────────────────── Questionnaires & assessment ─────────────────────────────
+
+model Questionnaire {
+  id               String               @id @default(uuid()) @db.Uuid
+  key              String
+  version          Int
+  purpose          QuestionnairePurpose
+  status           ContentStatus        @default(DRAFT)
+  title            Json
+  description      Json
+  scoringAlgorithm String
+  scoringVersion   String
+  publishedAt      DateTime?
+  createdById      String?              @db.Uuid
+  createdAt        DateTime             @default(now())
+
+  questions Question[]
+  responses QuestionnaireResponse[]
+
+  @@unique([key, version])
+  @@map("questionnaires")
+}
+
+model Question {
+  id              String                @id @default(uuid()) @db.Uuid
+  questionnaireId String                @db.Uuid
+  key             String
+  order           Int
+  type            QuestionType
+  prompt          Json
+  help            Json?
+  required        Boolean               @default(true)
+  options         Json?
+  min             Int?
+  max             Int?
+  questionnaire   Questionnaire         @relation(fields: [questionnaireId], references: [id])
+  answers         QuestionnaireAnswer[]
+
+  @@unique([questionnaireId, key])
+  @@map("questions")
+}
+
+model QuestionnaireResponse {
+  id              String                @id @default(uuid()) @db.Uuid
+  userId          String                @db.Uuid
+  questionnaireId String                @db.Uuid
+  status          ResponseStatus        @default(DRAFT)
+  score           Float?
+  scoringVersion  String?
+  startedAt       DateTime              @default(now())
+  submittedAt     DateTime?
+  user            User                  @relation(fields: [userId], references: [id])
+  questionnaire   Questionnaire         @relation(fields: [questionnaireId], references: [id])
+  answers         QuestionnaireAnswer[]
+  assessment      Assessment?
+
+  @@index([userId, questionnaireId, status])
+  @@map("questionnaire_responses")
+}
+
+model QuestionnaireAnswer {
+  id         String                @id @default(uuid()) @db.Uuid
+  responseId String                @db.Uuid
+  questionId String                @db.Uuid
+  value      Json
+  response   QuestionnaireResponse @relation(fields: [responseId], references: [id])
+  question   Question              @relation(fields: [questionId], references: [id])
+
+  @@unique([responseId, questionId])
+  @@map("questionnaire_answers")
+}
+
+model Assessment {
+  id         String                @id @default(uuid()) @db.Uuid
+  userId     String                @db.Uuid
+  purpose    QuestionnairePurpose
+  responseId String                @unique @db.Uuid
+  score      Float
+  createdAt  DateTime              @default(now())
+  user       User                  @relation(fields: [userId], references: [id])
+  response   QuestionnaireResponse @relation(fields: [responseId], references: [id])
+
+  @@unique([userId, purpose])
+  @@map("assessments")
+}
+
+// ───────────────────────────── Treatment & exercises ─────────────────────────────
+
+model TreatmentPlan {
+  id        String             @id @default(uuid()) @db.Uuid
+  key       String             @unique
+  productId String             @db.Uuid
+  product   DigaProduct        @relation(fields: [productId], references: [id])
+  versions  TreatmentVersion[]
+
+  @@map("treatment_plans")
+}
+
+model TreatmentVersion {
+  id                String             @id @default(uuid()) @db.Uuid
+  planId            String             @db.Uuid
+  version           Int
+  status            ContentStatus      @default(DRAFT)
+  title             Json
+  objectives        Json
+  durationWeeks     Int
+  /// Assignment rule: baseline score range (inclusive) this version is suitable for.
+  minBaselineScore  Int
+  maxBaselineScore  Int
+  publishedAt       DateTime?
+  createdById       String?            @db.Uuid
+  createdAt         DateTime           @default(now())
+  plan              TreatmentPlan      @relation(fields: [planId], references: [id])
+  exercises         PlanExercise[]
+  patientTreatments PatientTreatment[]
+
+  @@unique([planId, version])
+  @@map("treatment_versions")
+}
+
+model PlanExercise {
+  id                 String           @id @default(uuid()) @db.Uuid
+  treatmentVersionId String           @db.Uuid
+  exerciseVersionId  String           @db.Uuid
+  order              Int
+  repetitions        Int?
+  treatmentVersion   TreatmentVersion @relation(fields: [treatmentVersionId], references: [id])
+  exerciseVersion    ExerciseVersion  @relation(fields: [exerciseVersionId], references: [id])
+
+  @@unique([treatmentVersionId, exerciseVersionId])
+  @@map("plan_exercises")
+}
+
+model Exercise {
+  id       String            @id @default(uuid()) @db.Uuid
+  key      String            @unique
+  versions ExerciseVersion[]
+
+  @@map("exercises")
+}
+
+model ExerciseVersion {
+  id              String               @id @default(uuid()) @db.Uuid
+  exerciseId      String               @db.Uuid
+  version         Int
+  status          ContentStatus        @default(DRAFT)
+  title           Json
+  summary         Json
+  steps           Json
+  safetyNotes     Json
+  durationSeconds Int
+  mediaUrl        String?
+  transcript      Json?
+  publishedAt     DateTime?
+  createdById     String?              @db.Uuid
+  createdAt       DateTime             @default(now())
+  exercise        Exercise             @relation(fields: [exerciseId], references: [id])
+  planExercises   PlanExercise[]
+  completions     ExerciseCompletion[]
+
+  @@unique([exerciseId, version])
+  @@map("exercise_versions")
+}
+
+model PatientTreatment {
+  id                 String                 @id @default(uuid()) @db.Uuid
+  userId             String                 @db.Uuid
+  treatmentVersionId String                 @db.Uuid
+  status             PatientTreatmentStatus @default(ACTIVE)
+  startedAt          DateTime               @default(now())
+  endsAt             DateTime
+  completedAt        DateTime?
+  user               User                   @relation(fields: [userId], references: [id])
+  treatmentVersion   TreatmentVersion       @relation(fields: [treatmentVersionId], references: [id])
+  sessions           TreatmentSession[]
+
+  @@index([userId, status])
+  @@map("patient_treatments")
+}
+
+model TreatmentSession {
+  id                 String               @id @default(uuid()) @db.Uuid
+  userId             String               @db.Uuid
+  patientTreatmentId String               @db.Uuid
+  clientId           String
+  status             SessionStatus        @default(IN_PROGRESS)
+  startedAt          DateTime             @default(now())
+  pausedAt           DateTime?
+  endedAt            DateTime?
+  perceivedEffort    Int?
+  user               User                 @relation(fields: [userId], references: [id])
+  patientTreatment   PatientTreatment     @relation(fields: [patientTreatmentId], references: [id])
+  completions        ExerciseCompletion[]
+
+  @@unique([userId, clientId])
+  @@index([patientTreatmentId, startedAt])
+  @@map("treatment_sessions")
+}
+
+model ExerciseCompletion {
+  id                  String            @id @default(uuid()) @db.Uuid
+  userId              String            @db.Uuid
+  sessionId           String?           @db.Uuid
+  exerciseVersionId   String            @db.Uuid
+  clientId            String
+  startedAt           DateTime
+  completedAt         DateTime
+  durationSeconds     Int
+  perceivedDifficulty Int?
+  user                User              @relation(fields: [userId], references: [id])
+  session             TreatmentSession? @relation(fields: [sessionId], references: [id])
+  exerciseVersion     ExerciseVersion   @relation(fields: [exerciseVersionId], references: [id])
+
+  @@unique([userId, clientId])
+  @@index([userId, completedAt])
+  @@map("exercise_completions")
+}
+
+// ───────────────────────────── Tracking ─────────────────────────────
+
+model Observation {
+  id                       String                  @id @default(uuid()) @db.Uuid
+  userId                   String                  @db.Uuid
+  clientId                 String
+  kind                     ObservationKind
+  value                    Int
+  note                     String?
+  effectiveAt              DateTime
+  recordedAt               DateTime                @default(now())
+  source                   String                  @default("app")
+  status                   ObservationStatus       @default(CURRENT)
+  supersedesId             String?                 @unique @db.Uuid
+  user                     User                    @relation(fields: [userId], references: [id])
+  supersedes               Observation?            @relation("ObservationChain", fields: [supersedesId], references: [id])
+  supersededBy             Observation?            @relation("ObservationChain")
+  correctionsAsOriginal    ObservationCorrection[] @relation("CorrectionOriginal")
+  correctionsAsReplacement ObservationCorrection[] @relation("CorrectionReplacement")
+
+  @@unique([userId, clientId])
+  @@index([userId, effectiveAt])
+  @@map("observations")
+}
+
+model ObservationCorrection {
+  id            String      @id @default(uuid()) @db.Uuid
+  originalId    String      @db.Uuid
+  replacementId String      @db.Uuid
+  reason        String
+  correctedById String      @db.Uuid
+  correctedAt   DateTime    @default(now())
+  original      Observation @relation("CorrectionOriginal", fields: [originalId], references: [id])
+  replacement   Observation @relation("CorrectionReplacement", fields: [replacementId], references: [id])
+
+  @@map("observation_corrections")
+}
+
+// ───────────────────────────── Notifications & sync ─────────────────────────────
+
+model Notification {
+  id            String             @id @default(uuid()) @db.Uuid
+  userId        String             @db.Uuid
+  kind          String
+  dedupeKey     String             @unique
+  scheduledFor  DateTime
+  status        NotificationStatus @default(SCHEDULED)
+  sentAt        DateTime?
+  providerRef   String?
+  failureReason String?
+  createdAt     DateTime           @default(now())
+  user          User               @relation(fields: [userId], references: [id])
+
+  @@index([status, scheduledFor])
+  @@map("notifications")
+}
+
+model SyncEvent {
+  id            String          @id @default(uuid()) @db.Uuid
+  userId        String          @db.Uuid
+  clientEventId String
+  type          String
+  status        SyncEventStatus
+  resultId      String?
+  errorCode     String?
+  receivedAt    DateTime        @default(now())
+  user          User            @relation(fields: [userId], references: [id])
+
+  @@unique([userId, clientEventId])
+  @@map("sync_events")
+}
+
+model IdempotencyRecord {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @db.Uuid
+  scope          String
+  key            String
+  requestHash    String
+  responseStatus Int
+  responseBody   Json
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+
+  @@unique([userId, scope, key])
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+
+// ───────────────────────────── Reports ─────────────────────────────
+
+model Report {
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @db.Uuid
+  kind        ReportKind
+  status      ReportStatus @default(PENDING)
+  fileName    String?
+  contentType String?
+  storageKey  String?
+  failureCode String?
+  createdAt   DateTime     @default(now())
+  completedAt DateTime?
+  user        User         @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("reports")
+}
+
+// ───────────────────────────── Support & administration ─────────────────────────────
+
+model SupportTicket {
+  id        String       @id @default(uuid()) @db.Uuid
+  userId    String       @db.Uuid
+  category  String
+  subject   String
+  message   String
+  status    TicketStatus @default(OPEN)
+  agentNote String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  user      User         @relation(fields: [userId], references: [id])
+
+  @@index([status, createdAt])
+  @@map("support_tickets")
+}
+
+model ContentReview {
+  id           String          @id @default(uuid()) @db.Uuid
+  resourceType ContentResource
+  resourceId   String          @db.Uuid
+  action       ReviewAction
+  actorId      String          @db.Uuid
+  reason       String?
+  createdAt    DateTime        @default(now())
+
+  @@index([resourceType, resourceId])
+  @@map("content_reviews")
+}
+
+// ───────────────────────────── Audit ─────────────────────────────
+
+/// Append-only. Never contains medical payloads.
+model AuditEvent {
+  id            String       @id @default(uuid()) @db.Uuid
+  occurredAt    DateTime     @default(now())
+  actorId       String?      @db.Uuid
+  actorRole     Role?
+  action        String
+  resourceType  String
+  resourceId    String?
+  outcome       AuditOutcome
+  requestId     String?
+  sourceContext Json?
+  reason        String?
+
+  @@index([actorId, occurredAt])
+  @@index([action, occurredAt])
+  @@map("audit_events")
+}
