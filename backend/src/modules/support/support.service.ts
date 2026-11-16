@@ -13,7 +13,8 @@ export const listFaq = (locale: Locale) =>
   }));
 
 /** Support must never receive activation codes; anything shaped like one is removed. */
-const CODE_LIKE = /\b[A-Z0-9]{4}[-\s]?[A-Z0-9]{4}[-\s]?[A-Z0-9]{4}\b/gi;
+const CODE_LIKE =
+  /\b[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}\b|\b(?=[A-Z0-9]*\d)(?=[A-Z0-9]*[A-Z])[A-Z0-9]{12}\b/gi;
 export const redact = (text: string) => text.replace(CODE_LIKE, '[removed]');
 
 type TicketInput = { category: string; subject: string; message: string };
