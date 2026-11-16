@@ -12,7 +12,8 @@ abstract final class AppColors {
   static const success = Color(0xFF24734A);
   static const warning = Color(0xFF95600C);
   static const error = Color(0xFFB4232F);
-  static const border = Color(0xFF8A9BA8);
+  // Control boundaries need at least 3:1 against surface and background.
+  static const border = Color(0xFF6F808E);
 
   // High-contrast variant (user preference).
   static const hcText = Color(0xFF000000);
