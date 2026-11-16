@@ -6,7 +6,7 @@ import { redis } from './config/redis';
 import { routeModules } from './routes';
 
 async function main() {
-  await redis?.connect();
+  // Redis connects lazily on first command (the rate-limit store loads its script at startup).
   const app = createApp(routeModules);
   const server = app.listen(env.PORT, () => logger.info(`TheraCare API listening on :${env.PORT}`));
 
