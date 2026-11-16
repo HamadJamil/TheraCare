@@ -226,6 +226,8 @@ model UserSession {
 model EmailVerification {
   id         String    @id @default(uuid()) @db.Uuid
   userId     String    @db.Uuid
+  /// Set when the challenge confirms a change of email address.
+  newEmail   String?
   codeHash   String
   attempts   Int       @default(0)
   expiresAt  DateTime
