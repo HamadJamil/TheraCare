@@ -36,3 +36,29 @@ Future<void> pumpApp(
   );
   settle ? await tester.pumpAndSettle() : await tester.pump();
 }
+
+/// Pumps a full screen (with its own Scaffold) in a tall phone-width viewport
+/// so every control can be tapped without scrolling.
+Future<void> pumpScreen(
+  WidgetTester tester,
+  Widget screen, {
+  Locale locale = const Locale('en'),
+  List<Object> overrides = const [],
+}) async {
+  tester.view.physicalSize = const Size(1080, 7200);
+  tester.view.devicePixelRatio = 3;
+  addTearDown(tester.view.reset);
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: overrides.cast(),
+      child: MaterialApp(
+        theme: AppTheme.light(),
+        locale: locale,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        home: screen,
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
