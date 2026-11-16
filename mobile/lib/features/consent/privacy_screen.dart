@@ -72,11 +72,22 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (final type in list) ...[
-                  SectionTitle(type.title),
-                  _ConsentBlock(
-                    type: type,
-                    choice: _choices[type.id],
-                    onChanged: (v) => setState(() => _choices[type.id] = v),
+                  const Gap(AppSpacing.md),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SectionTitle(type.title),
+                          _ConsentBlock(
+                            type: type,
+                            choice: _choices[type.id],
+                            onChanged: (v) => setState(() => _choices[type.id] = v),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
                 const Gap(AppSpacing.lg),
