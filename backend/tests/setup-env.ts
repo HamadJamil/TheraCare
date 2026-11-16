@@ -9,3 +9,4 @@ process.env.TOKEN_PEPPER = 'test-token-pepper-0000';
 process.env.RATE_LIMIT_AUTH_MAX = '1000';
 process.env.RATE_LIMIT_ACTIVATION_MAX = '1000';
 process.env.STORAGE_DIR = './storage-test';
+process.env.FILE_ENCRYPTION_KEY = '1'.repeat(64);

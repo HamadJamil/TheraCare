@@ -19,6 +19,8 @@ const schema = z.object({
   RATE_LIMIT_AUTH_MAX: z.coerce.number().int().positive().default(20),
   RATE_LIMIT_ACTIVATION_MAX: z.coerce.number().int().positive().default(10),
   STORAGE_DIR: z.string().default('./storage'),
+  /** 64 hex chars (32 bytes) used to encrypt generated files at rest. */
+  FILE_ENCRYPTION_KEY: z.string().regex(/^[0-9a-f]{64}$/i, 'must be 64 hex characters'),
 });
 
 const parsed = schema.safeParse(process.env);
