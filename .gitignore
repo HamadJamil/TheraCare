@@ -1,0 +1,30 @@
+# --- Specification / design documents (never committed) ---
+*.docx
+*.doc
+*.pdf
+*.pptx
+*.xlsx
+docs/
+specs/
+*PRD*
+*FRD*
+*TRD*
+
+# --- OS / editor ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Node backend ---
+backend/node_modules/
+backend/dist/
+backend/coverage/
+backend/storage/
+*.log
+
