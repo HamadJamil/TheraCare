@@ -1969,6 +1969,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{done} of {planned} exercises'**
   String dayProgress(int done, int planned);
+
+  /// No description provided for @scaleChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'You chose {value} of {max}.'**
+  String scaleChosen(int value, int max);
+
+  /// No description provided for @quickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'More for today'**
+  String get quickActions;
+
+  /// No description provided for @recordPainHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain, stiffness, sleep or mood – takes less than a minute.'**
+  String get recordPainHint;
+
+  /// No description provided for @questionnairesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Short check-ins about your back.'**
+  String get questionnairesHint;
+
+  /// No description provided for @statExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'exercises'**
+  String get statExercises;
+
+  /// No description provided for @statActiveDays.
+  ///
+  /// In en, this message translates to:
+  /// **'active days'**
+  String get statActiveDays;
+
+  /// No description provided for @statAveragePain.
+  ///
+  /// In en, this message translates to:
+  /// **'average pain'**
+  String get statAveragePain;
+
+  /// No description provided for @weekByWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week by week'**
+  String get weekByWeek;
+
+  /// No description provided for @groupSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get groupSettings;
+
+  /// No description provided for @groupPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy and data'**
+  String get groupPrivacy;
+
+  /// No description provided for @groupSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get groupSupport;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

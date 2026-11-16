@@ -528,5 +528,26 @@
         "type": "int"
       }
     }
-  }
+  },
+  "scaleChosen": "You chose {value} of {max}.",
+  "@scaleChosen": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "quickActions": "More for today",
+  "recordPainHint": "Pain, stiffness, sleep or mood – takes less than a minute.",
+  "questionnairesHint": "Short check-ins about your back.",
+  "statExercises": "exercises",
+  "statActiveDays": "active days",
+  "statAveragePain": "average pain",
+  "weekByWeek": "Week by week",
+  "groupSettings": "Settings",
+  "groupPrivacy": "Privacy and data",
+  "groupSupport": "Support"
 }
