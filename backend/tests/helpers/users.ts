@@ -1,4 +1,7 @@
+import type { Role } from '@prisma/client';
+import { prisma } from '../../src/config/database';
 import { testOutbox } from '../../src/infrastructure/mailer';
+import { hashPassword } from '../../src/modules/auth/password';
 import { api } from './app';
 
 export const PASSWORD = 'correct-horse-42';
@@ -34,3 +37,24 @@ export async function signUp(email = `patient-${Date.now()}-${Math.random()}@exa
 }
 
 export type TestUser = Awaited<ReturnType<typeof signUp>>;
+
+/** Creates a verified staff account directly and signs it in. */
+export async function staff(
+  role: Role,
+  email = `${role.toLowerCase()}-${Math.random()}@staff.test`,
+) {
+  await prisma.user.create({
+    data: {
+      email,
+      passwordHash: await hashPassword(PASSWORD),
+      status: 'ACTIVE',
+      role,
+      journeyState: 'ENTITLEMENT_PENDING',
+    },
+  });
+  const res = await api()
+    .post('/api/v1/auth/login')
+    .send({ email, password: PASSWORD })
+    .expect(200);
+  return { email, bearer: `Bearer ${res.body.data.accessToken}` };
+}
