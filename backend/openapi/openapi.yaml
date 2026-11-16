@@ -141,7 +141,11 @@ paths:
                 firstName: { type: string }
                 lastName: { type: string }
                 language: { type: string, enum: [de, en] }
-      responses: { '202': { $ref: '#/components/responses/Accepted' }, '400': { $ref: '#/components/responses/Error' } }
+      responses:
+        {
+          '202': { $ref: '#/components/responses/Accepted' },
+          '400': { $ref: '#/components/responses/Error' },
+        }
   /auth/verify-email:
     post:
       tags: [Auth]
@@ -157,7 +161,11 @@ paths:
                 email: { type: string }
                 code: { type: string, pattern: '^\d{6}$' }
                 deviceLabel: { type: string }
-      responses: { '201': { $ref: '#/components/responses/Created' }, '400': { $ref: '#/components/responses/Error' } }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Created' },
+          '400': { $ref: '#/components/responses/Error' },
+        }
   /auth/resend-verification:
     post:
       tags: [Auth]
@@ -179,7 +187,12 @@ paths:
                 email: { type: string }
                 password: { type: string }
                 deviceLabel: { type: string }
-      responses: { '200': { $ref: '#/components/responses/Ok' }, '401': { $ref: '#/components/responses/Error' }, '412': { $ref: '#/components/responses/Error' } }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Ok' },
+          '401': { $ref: '#/components/responses/Error' },
+          '412': { $ref: '#/components/responses/Error' },
+        }
   /auth/refresh:
     post:
       tags: [Auth]
@@ -188,10 +201,24 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: { type: object, required: [refreshToken], properties: { refreshToken: { type: string } } }
-      responses: { '200': { $ref: '#/components/responses/Ok' }, '401': { $ref: '#/components/responses/Error' } }
+            schema:
+              {
+                type: object,
+                required: [refreshToken],
+                properties: { refreshToken: { type: string } },
+              }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Ok' },
+          '401': { $ref: '#/components/responses/Error' },
+        }
   /auth/logout:
-    post: { tags: [Auth], summary: Revoke current session, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    post:
+      {
+        tags: [Auth],
+        summary: Revoke current session,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /auth/forgot-password:
     post:
       tags: [Auth]
@@ -206,29 +233,87 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: { type: object, required: [token, password], properties: { token: { type: string }, password: { type: string } } }
-      responses: { '200': { $ref: '#/components/responses/Ok' }, '400': { $ref: '#/components/responses/Error' } }
+            schema:
+              {
+                type: object,
+                required: [token, password],
+                properties: { token: { type: string }, password: { type: string } },
+              }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Ok' },
+          '400': { $ref: '#/components/responses/Error' },
+        }
   /auth/sessions:
-    get: { tags: [Auth], summary: List own active sessions, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Auth],
+        summary: List own active sessions,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /auth/sessions/{id}:
     delete:
       tags: [Auth]
       summary: Revoke one of own sessions
       parameters: [{ $ref: '#/components/parameters/Id' }]
-      responses: { '200': { $ref: '#/components/responses/Ok' }, '404': { $ref: '#/components/responses/Error' } }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Ok' },
+          '404': { $ref: '#/components/responses/Error' },
+        }
 
   /patients/me:
-    get: { tags: [Patient], summary: Own profile, account status and journey, responses: { '200': { $ref: '#/components/responses/Ok' } } }
-    patch: { tags: [Patient], summary: Update permitted profile fields (audited), responses: { '200': { $ref: '#/components/responses/Ok' }, '400': { $ref: '#/components/responses/Error' } } }
+    get:
+      {
+        tags: [Patient],
+        summary: Own profile,
+        account status and journey,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
+    patch:
+      {
+        tags: [Patient],
+        summary: Update permitted profile fields (audited),
+        responses:
+          {
+            '200': { $ref: '#/components/responses/Ok' },
+            '400': { $ref: '#/components/responses/Error' },
+          },
+      }
   /patients/me/journey:
-    get: { tags: [Patient], summary: Journey state and next step, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Patient],
+        summary: Journey state and next step,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /patients/me/preferences:
-    get: { tags: [Patient], summary: Accessibility and reminder preferences, responses: { '200': { $ref: '#/components/responses/Ok' } } }
-    patch: { tags: [Patient], summary: Update preferences, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Patient],
+        summary: Accessibility and reminder preferences,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
+    patch:
+      {
+        tags: [Patient],
+        summary: Update preferences,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /patients/me/email:
-    post: { tags: [Patient], summary: Start email change (password + code to new address), responses: { '202': { $ref: '#/components/responses/Accepted' } } }
+    post:
+      {
+        tags: [Patient],
+        summary: Start email change (password + code to new address),
+        responses: { '202': { $ref: '#/components/responses/Accepted' } },
+      }
   /patients/me/email/confirm:
-    post: { tags: [Patient], summary: Confirm email change with code, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    post:
+      {
+        tags: [Patient],
+        summary: Confirm email change with code,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /patients/me/close:
     post:
       tags: [Patient]
@@ -236,7 +321,13 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: { type: object, required: [password, confirm], properties: { password: { type: string }, confirm: { type: boolean, enum: [true] } } }
+            schema:
+              {
+                type: object,
+                required: [password, confirm],
+                properties:
+                  { password: { type: string }, confirm: { type: boolean, enum: [true] } },
+              }
       responses: { '200': { $ref: '#/components/responses/Ok' } }
 
   /activations/redeem:
@@ -247,17 +338,48 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: { type: object, required: [code], properties: { code: { type: string, example: ABCD-EFGH-JKLM } } }
-      responses: { '201': { $ref: '#/components/responses/Created' }, '400': { $ref: '#/components/responses/Error' }, '409': { $ref: '#/components/responses/Error' } }
+            schema:
+              {
+                type: object,
+                required: [code],
+                properties: { code: { type: string, example: ABCD-EFGH-JKLM } },
+              }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Created' },
+          '400': { $ref: '#/components/responses/Error' },
+          '409': { $ref: '#/components/responses/Error' },
+        }
   /activations/status:
-    get: { tags: [Activation], summary: Activation status, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Activation],
+        summary: Activation status,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /entitlements/me:
-    get: { tags: [Activation], summary: Current entitlement, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Activation],
+        summary: Current entitlement,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
 
   /consents/types:
-    get: { tags: [Consent], summary: Active consent types (localized), parameters: [{ $ref: '#/components/parameters/Lang' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Consent],
+        summary: Active consent types (localized),
+        parameters: [{ $ref: '#/components/parameters/Lang' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /consents/me:
-    get: { tags: [Consent], summary: Current decisions and history, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Consent],
+        summary: Current decisions and history,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /consents:
     post:
       tags: [Consent]
@@ -278,19 +400,59 @@ paths:
       tags: [Consent]
       summary: Withdraw consent; response explains consequences
       parameters: [{ $ref: '#/components/parameters/Id' }]
-      responses: { '200': { $ref: '#/components/responses/Ok' }, '409': { $ref: '#/components/responses/Error' } }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Ok' },
+          '409': { $ref: '#/components/responses/Error' },
+        }
 
   /onboarding:
-    get: { tags: [Onboarding], summary: Onboarding state, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Onboarding],
+        summary: Onboarding state,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /onboarding/start:
-    post: { tags: [Onboarding], summary: Start onboarding (after privacy), responses: { '200': { $ref: '#/components/responses/Ok' }, '412': { $ref: '#/components/responses/Error' } } }
+    post:
+      {
+        tags: [Onboarding],
+        summary: Start onboarding (after privacy),
+        responses:
+          {
+            '200': { $ref: '#/components/responses/Ok' },
+            '412': { $ref: '#/components/responses/Error' },
+          },
+      }
   /assessments/me:
-    get: { tags: [Onboarding], summary: Baseline and final scores, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Onboarding],
+        summary: Baseline and final scores,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
 
   /treatments/current:
-    get: { tags: [Treatment], summary: Assigned plan, week and today's exercises, parameters: [{ $ref: '#/components/parameters/Lang' }], responses: { '200': { $ref: '#/components/responses/Ok' }, '412': { $ref: '#/components/responses/Error' } } }
+    get:
+      {
+        tags: [Treatment],
+        summary: Assigned plan,
+        week and today's exercises,
+        parameters: [{ $ref: '#/components/parameters/Lang' }],
+        responses:
+          {
+            '200': { $ref: '#/components/responses/Ok' },
+            '412': { $ref: '#/components/responses/Error' },
+          },
+      }
   /treatments/{id}/schedule:
-    get: { tags: [Treatment], summary: Weekly schedule (planned vs completed), parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Treatment],
+        summary: Weekly schedule (planned vs completed),
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /treatments/{id}/sessions:
     post:
       tags: [Treatment]
@@ -299,19 +461,57 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: { type: object, required: [clientId], properties: { clientId: { type: string, format: uuid } } }
+            schema:
+              {
+                type: object,
+                required: [clientId],
+                properties: { clientId: { type: string, format: uuid } },
+              }
       responses: { '201': { $ref: '#/components/responses/Created' } }
   /sessions/{id}/pause:
-    post: { tags: [Treatment], parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    post:
+      {
+        tags: [Treatment],
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /sessions/{id}/resume:
-    post: { tags: [Treatment], parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    post:
+      {
+        tags: [Treatment],
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /sessions/{id}/complete:
-    post: { tags: [Treatment], summary: Complete (safe to retry), parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    post:
+      {
+        tags: [Treatment],
+        summary: Complete (safe to retry),
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
 
   /exercises:
-    get: { tags: [Exercises], summary: Assigned exercise versions, parameters: [{ $ref: '#/components/parameters/Lang' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Exercises],
+        summary: Assigned exercise versions,
+        parameters: [{ $ref: '#/components/parameters/Lang' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /exercises/{id}:
-    get: { tags: [Exercises], summary: Exercise detail with steps, safety notes and transcript, parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' }, '404': { $ref: '#/components/responses/Error' } } }
+    get:
+      {
+        tags: [Exercises],
+        summary: Exercise detail with steps,
+        safety notes and transcript,
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses:
+          {
+            '200': { $ref: '#/components/responses/Ok' },
+            '404': { $ref: '#/components/responses/Error' },
+          },
+      }
   /exercises/{id}/completions:
     post:
       tags: [Exercises]
@@ -329,16 +529,29 @@ paths:
                 startedAt: { type: string, format: date-time }
                 completedAt: { type: string, format: date-time }
                 perceivedDifficulty: { type: integer, minimum: 1, maximum: 5 }
-      responses: { '201': { $ref: '#/components/responses/Created' }, '200': { $ref: '#/components/responses/Ok' } }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Created' },
+          '200': { $ref: '#/components/responses/Ok' },
+        }
 
   /observations/instruments:
-    get: { tags: [Tracking], summary: Configured scales, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Tracking],
+        summary: Configured scales,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /observations:
     get:
       tags: [Tracking]
       summary: List current observations (cursor pagination)
       parameters:
-        - { name: kind, in: query, schema: { type: string, enum: [PAIN_INTENSITY, STIFFNESS, SLEEP_QUALITY, MOOD] } }
+        - {
+            name: kind,
+            in: query,
+            schema: { type: string, enum: [PAIN_INTENSITY, STIFFNESS, SLEEP_QUALITY, MOOD] },
+          }
         - { name: from, in: query, schema: { type: string, format: date-time } }
         - { name: to, in: query, schema: { type: string, format: date-time } }
         - { name: includeCorrected, in: query, schema: { type: boolean } }
@@ -360,16 +573,47 @@ paths:
                 value: { type: integer }
                 note: { type: string, maxLength: 500 }
                 effectiveAt: { type: string, format: date-time }
-      responses: { '201': { $ref: '#/components/responses/Created' }, '400': { $ref: '#/components/responses/Error' } }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Created' },
+          '400': { $ref: '#/components/responses/Error' },
+        }
   /observations/{id}/corrections:
-    post: { tags: [Tracking], summary: Append-only correction with reason, parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '201': { $ref: '#/components/responses/Created' }, '409': { $ref: '#/components/responses/Error' } } }
+    post:
+      {
+        tags: [Tracking],
+        summary: Append-only correction with reason,
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses:
+          {
+            '201': { $ref: '#/components/responses/Created' },
+            '409': { $ref: '#/components/responses/Error' },
+          },
+      }
   /observations/{id}/history:
-    get: { tags: [Tracking], summary: Correction chain, parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Tracking],
+        summary: Correction chain,
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
 
   /questionnaires:
-    get: { tags: [Questionnaires], summary: Questionnaires available in the current journey stage, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Questionnaires],
+        summary: Questionnaires available in the current journey stage,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /questionnaires/{id}:
-    get: { tags: [Questionnaires], summary: Definition and saved draft, parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Questionnaires],
+        summary: Definition and saved draft,
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /questionnaires/{id}/drafts:
     post:
       tags: [Questionnaires]
@@ -378,21 +622,45 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: { type: object, properties: { answers: { type: array, items: { $ref: '#/components/schemas/Answer' } } } }
+            schema:
+              {
+                type: object,
+                properties:
+                  { answers: { type: array, items: { $ref: '#/components/schemas/Answer' } } },
+              }
       responses: { '200': { $ref: '#/components/responses/Ok' } }
   /questionnaires/{id}/responses:
     post:
       tags: [Questionnaires]
       summary: Submit (scored, versioned, immutable). Baseline assigns the treatment plan.
-      parameters: [{ $ref: '#/components/parameters/Id' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      parameters:
+        [{ $ref: '#/components/parameters/Id' }, { $ref: '#/components/parameters/IdempotencyKey' }]
       requestBody:
         content:
           application/json:
-            schema: { type: object, properties: { answers: { type: array, items: { $ref: '#/components/schemas/Answer' } } } }
-      responses: { '201': { $ref: '#/components/responses/Created' }, '400': { $ref: '#/components/responses/Error' }, '409': { $ref: '#/components/responses/Error' } }
+            schema:
+              {
+                type: object,
+                properties:
+                  { answers: { type: array, items: { $ref: '#/components/schemas/Answer' } } },
+              }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Created' },
+          '400': { $ref: '#/components/responses/Error' },
+          '409': { $ref: '#/components/responses/Error' },
+        }
 
   /progress/overview:
-    get: { tags: [Progress], summary: Dashboard (next action, today, recent entries, this week), responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Progress],
+        summary: Dashboard (next action,
+        today,
+        recent entries,
+        this week),
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /progress/weekly:
     get:
       tags: [Progress]
@@ -407,67 +675,211 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: { type: object, properties: { events: { type: array, maxItems: 100, items: { $ref: '#/components/schemas/SyncEvent' } } } }
+            schema:
+              {
+                type: object,
+                properties:
+                  {
+                    events:
+                      {
+                        type: array,
+                        maxItems: 100,
+                        items: { $ref: '#/components/schemas/SyncEvent' },
+                      },
+                  },
+              }
       responses: { '200': { $ref: '#/components/responses/Ok' } }
   /sync/status:
-    get: { tags: [Sync], summary: Sync counters and server time, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Sync],
+        summary: Sync counters and server time,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
 
   /reports:
-    get: { tags: [Reports], summary: List PDF summaries, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Reports],
+        summary: List PDF summaries,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
     post:
       tags: [Reports]
       summary: Request a PDF summary (asynchronous)
       requestBody:
         content:
           application/json:
-            schema: { type: object, properties: { kind: { type: string, enum: [TREATMENT_SUMMARY_PDF] } } }
+            schema:
+              {
+                type: object,
+                properties: { kind: { type: string, enum: [TREATMENT_SUMMARY_PDF] } },
+              }
       responses: { '201': { $ref: '#/components/responses/Created' } }
   /reports/{id}:
-    get: { tags: [Reports], summary: Report status, parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Reports],
+        summary: Report status,
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /reports/{id}/export:
-    post: { tags: [Reports], summary: Retry a failed report, parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    post:
+      {
+        tags: [Reports],
+        summary: Retry a failed report,
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /reports/{id}/download:
-    get: { tags: [Reports], parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/File' }, '409': { $ref: '#/components/responses/Error' } } }
+    get:
+      {
+        tags: [Reports],
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses:
+          {
+            '200': { $ref: '#/components/responses/File' },
+            '409': { $ref: '#/components/responses/Error' },
+          },
+      }
 
   /fhir/metadata:
-    get: { tags: [FHIR], security: [], summary: CapabilityStatement (FHIR R4), responses: { '200': { description: CapabilityStatement } } }
+    get:
+      {
+        tags: [FHIR],
+        security: [],
+        summary: CapabilityStatement (FHIR R4),
+        responses: { '200': { description: CapabilityStatement } },
+      }
   /fhir/exports:
-    post: { tags: [FHIR], summary: Create a validated FHIR Bundle export (asynchronous), responses: { '201': { $ref: '#/components/responses/Created' } } }
+    post:
+      {
+        tags: [FHIR],
+        summary: Create a validated FHIR Bundle export (asynchronous),
+        responses: { '201': { $ref: '#/components/responses/Created' } },
+      }
   /fhir/exports/{id}:
-    get: { tags: [FHIR], parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [FHIR],
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /fhir/exports/{id}/download:
-    get: { tags: [FHIR], parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/File' } } }
+    get:
+      {
+        tags: [FHIR],
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/File' } },
+      }
 
   /notifications/me:
-    get: { tags: [Notifications], summary: Recent reminders, responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Notifications],
+        summary: Recent reminders,
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
 
   /support/faq:
-    get: { tags: [Support], security: [], summary: FAQ, parameters: [{ $ref: '#/components/parameters/Lang' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Support],
+        security: [],
+        summary: FAQ,
+        parameters: [{ $ref: '#/components/parameters/Lang' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /support/tickets:
-    post: { tags: [Support], summary: Create ticket (activation codes are redacted), responses: { '201': { $ref: '#/components/responses/Created' } } }
+    post:
+      {
+        tags: [Support],
+        summary: Create ticket (activation codes are redacted),
+        responses: { '201': { $ref: '#/components/responses/Created' } },
+      }
   /support/tickets/me:
     get: { tags: [Support], responses: { '200': { $ref: '#/components/responses/Ok' } } }
 
   /admin/support/tickets:
-    get: { tags: [Administration], summary: Support queue (SUPPORT_AGENT, ADMIN), responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Administration],
+        summary: Support queue (SUPPORT_AGENT,
+        ADMIN),
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /admin/support/tickets/{id}:
-    patch: { tags: [Administration], parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    patch:
+      {
+        tags: [Administration],
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /admin/audit-events:
-    get: { tags: [Administration], summary: Audit trail (SECURITY_AUDITOR, ADMIN), responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Administration],
+        summary: Audit trail (SECURITY_AUDITOR,
+        ADMIN),
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /admin/content/exercises:
-    get: { tags: [Administration], summary: Exercises and versions (content roles), responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Administration],
+        summary: Exercises and versions (content roles),
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
   /admin/content/exercises/{id}/versions:
-    post: { tags: [Administration], summary: New draft version (CONTENT_AUTHOR), parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '201': { $ref: '#/components/responses/Created' } } }
+    post:
+      {
+        tags: [Administration],
+        summary: New draft version (CONTENT_AUTHOR),
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '201': { $ref: '#/components/responses/Created' } },
+      }
   /admin/content/exercise-versions/{id}:
-    patch: { tags: [Administration], summary: Edit a draft (published content is immutable), parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' }, '409': { $ref: '#/components/responses/Error' } } }
+    patch:
+      {
+        tags: [Administration],
+        summary: Edit a draft (published content is immutable),
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses:
+          {
+            '200': { $ref: '#/components/responses/Ok' },
+            '409': { $ref: '#/components/responses/Error' },
+          },
+      }
   /admin/content/{resource}/{id}/{action}:
     post:
       tags: [Administration]
       summary: Lifecycle step — submit (author), approve/reject (reviewer, not the author), publish/retire (admin)
       parameters:
-        - { name: resource, in: path, required: true, schema: { type: string, enum: [exercise, treatment, questionnaire] } }
+        - {
+            name: resource,
+            in: path,
+            required: true,
+            schema: { type: string, enum: [exercise, treatment, questionnaire] },
+          }
         - { $ref: '#/components/parameters/Id' }
-        - { name: action, in: path, required: true, schema: { type: string, enum: [submit, approve, reject, publish, retire] } }
-      responses: { '200': { $ref: '#/components/responses/Ok' }, '403': { $ref: '#/components/responses/Error' }, '409': { $ref: '#/components/responses/Error' } }
+        - {
+            name: action,
+            in: path,
+            required: true,
+            schema: { type: string, enum: [submit, approve, reject, publish, retire] },
+          }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Ok' },
+          '403': { $ref: '#/components/responses/Error' },
+          '409': { $ref: '#/components/responses/Error' },
+        }
   /admin/content/reviews/{id}:
-    get: { tags: [Administration], summary: Review history, parameters: [{ $ref: '#/components/parameters/Id' }], responses: { '200': { $ref: '#/components/responses/Ok' } } }
+    get:
+      {
+        tags: [Administration],
+        summary: Review history,
+        parameters: [{ $ref: '#/components/parameters/Id' }],
+        responses: { '200': { $ref: '#/components/responses/Ok' } },
+      }
