@@ -150,7 +150,19 @@ export async function revokeSession(userId: string, sessionId: string, requestId
 
 // ───────────── Registration & verification ─────────────
 
-async function sendVerificationCode(user: Pick<User, 'id' | 'email'>, tx: Tx = prisma) {
+const invalidCode = () =>
+  new AppError(
+    400,
+    'INVALID_CODE',
+    'This code is not correct or has expired. You can request a new code.',
+  );
+
+/** Issues a fresh 6-digit challenge (invalidating older ones) and mails it to `sendTo`. */
+async function sendVerificationCode(
+  user: Pick<User, 'id' | 'email'>,
+  tx: Tx = prisma,
+  newEmail?: string,
+) {
   const code = numericCode(6);
   await tx.emailVerification.updateMany({
     where: { userId: user.id, consumedAt: null },
@@ -159,15 +171,33 @@ async function sendVerificationCode(user: Pick<User, 'id' | 'email'>, tx: Tx = p
   await tx.emailVerification.create({
     data: {
       userId: user.id,
+      newEmail,
       codeHash: hmac(`${user.id}:${code}`),
       expiresAt: new Date(Date.now() + VERIFICATION_TTL_MINUTES * 60_000),
     },
   });
   await sendMail({
-    to: user.email,
+    to: newEmail ?? user.email,
     subject: 'Your TheraCare confirmation code',
     text: `Your confirmation code is ${code}. It is valid for ${VERIFICATION_TTL_MINUTES} minutes.`,
   });
+}
+
+/** Checks a code against the latest open challenge, counting failed attempts. */
+async function checkChallenge(userId: string, code: string) {
+  const challenge = await prisma.emailVerification.findFirst({
+    where: { userId, consumedAt: null, expiresAt: { gt: new Date() } },
+    orderBy: { createdAt: 'desc' },
+  });
+  if (!challenge || challenge.attempts >= VERIFICATION_MAX_ATTEMPTS) throw invalidCode();
+  if (!safeEqual(challenge.codeHash, hmac(`${userId}:${code}`))) {
+    await prisma.emailVerification.update({
+      where: { id: challenge.id },
+      data: { attempts: { increment: 1 } },
+    });
+    throw invalidCode();
+  }
+  return challenge;
 }
 
 type RegisterInput = {
@@ -228,13 +258,6 @@ export async function resendVerification(email: string): Promise<void> {
   if (user?.status === 'PENDING_VERIFICATION') await sendVerificationCode(user);
 }
 
-const invalidCode = () =>
-  new AppError(
-    400,
-    'INVALID_CODE',
-    'This code is not correct or has expired. You can request a new code.',
-  );
-
 export async function verifyEmail(
   email: string,
   code: string,
@@ -243,19 +266,8 @@ export async function verifyEmail(
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user || user.status !== 'PENDING_VERIFICATION') throw invalidCode();
 
-  const challenge = await prisma.emailVerification.findFirst({
-    where: { userId: user.id, consumedAt: null, expiresAt: { gt: new Date() } },
-    orderBy: { createdAt: 'desc' },
-  });
-  if (!challenge || challenge.attempts >= VERIFICATION_MAX_ATTEMPTS) throw invalidCode();
-
-  if (!safeEqual(challenge.codeHash, hmac(`${user.id}:${code}`))) {
-    await prisma.emailVerification.update({
-      where: { id: challenge.id },
-      data: { attempts: { increment: 1 } },
-    });
-    throw invalidCode();
-  }
+  const challenge = await checkChallenge(user.id, code);
+  if (challenge.newEmail) throw invalidCode();
 
   return prisma.$transaction(async (tx) => {
     await tx.emailVerification.update({
@@ -366,4 +378,40 @@ export async function resetPassword(token: string, password: string, ctx: Contex
       tx,
     );
   });
+}
+
+// ───────────── Email change ─────────────
+
+export async function startEmailChange(userId: string, password: string, newEmail: string) {
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  if (!(await verifyPassword(user.passwordHash, password))) throw Errors.invalidCredentials();
+  if (await prisma.user.findUnique({ where: { email: newEmail } })) {
+    // Same response as success so the endpoint cannot be used to probe accounts.
+    return;
+  }
+  await sendVerificationCode(user, prisma, newEmail);
+}
+
+export async function confirmEmailChange(userId: string, code: string, ctx: Context) {
+  const challenge = await checkChallenge(userId, code);
+  if (!challenge.newEmail) throw invalidCode();
+  const newEmail = challenge.newEmail;
+  await prisma.$transaction(async (tx) => {
+    await tx.emailVerification.update({
+      where: { id: challenge.id },
+      data: { consumedAt: new Date() },
+    });
+    await tx.user.update({ where: { id: userId }, data: { email: newEmail } });
+    await audit(
+      {
+        action: 'auth.email_changed',
+        resourceType: 'user',
+        resourceId: userId,
+        actorId: userId,
+        requestId: ctx.requestId,
+      },
+      tx,
+    );
+  });
+  return { email: newEmail };
 }
