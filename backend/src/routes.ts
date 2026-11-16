@@ -3,6 +3,7 @@ import { activationsRouter } from './modules/activations/activations.routes';
 import { assessmentsRouter } from './modules/assessments/assessments.routes';
 import { auditRouter } from './modules/audit/audit.routes';
 import { authRouter } from './modules/auth/auth.routes';
+import { contentRouter } from './modules/content/content.routes';
 import { exercisesRouter } from './modules/exercises/exercises.routes';
 import { consentsRouter } from './modules/consents/consents.routes';
 import { notificationsRouter } from './modules/notifications/notifications.routes';
@@ -26,6 +27,7 @@ export const routeModules: RouteModule[] = [
   { path: '/sync', router: syncRouter },
   { path: '/progress', router: progressRouter },
   { path: '/notifications', router: notificationsRouter },
+  { path: '/admin/content', router: contentRouter },
   { path: '', router: activationsRouter },
   { path: '', router: treatmentsRouter },
   { path: '', router: assessmentsRouter },
