@@ -38,9 +38,15 @@ class WeeklyChart extends StatelessWidget {
                         children: [
                           Text('${w.exercisesCompleted}', style: Theme.of(context).textTheme.bodySmall),
                           const SizedBox(height: AppSpacing.xs),
-                          Container(
-                            height: 110 * (w.exercisesCompleted / max),
-                            decoration: BoxDecoration(color: primary, borderRadius: BorderRadius.circular(6)),
+                          // Bars share whatever height is left after the (scalable) labels.
+                          Expanded(
+                            child: FractionallySizedBox(
+                              alignment: Alignment.bottomCenter,
+                              heightFactor: w.exercisesCompleted / max,
+                              child: Container(
+                                decoration: BoxDecoration(color: primary, borderRadius: BorderRadius.circular(6)),
+                              ),
+                            ),
                           ),
                         ],
                       ),
