@@ -6,6 +6,7 @@ import { authRouter } from './modules/auth/auth.routes';
 import { exercisesRouter } from './modules/exercises/exercises.routes';
 import { consentsRouter } from './modules/consents/consents.routes';
 import { patientsRouter } from './modules/patients/patients.routes';
+import { progressRouter } from './modules/progress/progress.routes';
 import { questionnairesRouter } from './modules/questionnaires/questionnaires.routes';
 import { syncRouter } from './modules/sync/sync.routes';
 import { trackingRouter } from './modules/tracking/tracking.routes';
@@ -20,6 +21,7 @@ export const routeModules: RouteModule[] = [
   { path: '/questionnaires', router: questionnairesRouter },
   { path: '/observations', router: trackingRouter },
   { path: '/sync', router: syncRouter },
+  { path: '/progress', router: progressRouter },
   { path: '', router: activationsRouter },
   { path: '', router: treatmentsRouter },
   { path: '', router: assessmentsRouter },
