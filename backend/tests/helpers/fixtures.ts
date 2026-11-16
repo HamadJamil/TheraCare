@@ -1,6 +1,7 @@
 import { prisma } from '../../src/config/database';
-import { seedConsentTypes } from '../../prisma/seed/consents';
+import { seedReference } from '../../prisma/seed/reference';
 import { seedProducts } from '../../prisma/seed/product';
+import { assignTreatment } from '../../src/modules/treatments/treatments.service';
 import {
   generateActivationCode,
   hashActivationCode,
@@ -9,9 +10,9 @@ import { addDays } from '../../src/common/dates';
 import { api } from './app';
 import type { TestUser } from './users';
 
-export async function seedBase() {
-  await seedConsentTypes(prisma);
-  return seedProducts(prisma);
+/** Loads the same reference content the demo seed uses. */
+export function seedBase() {
+  return seedReference(prisma);
 }
 
 type CodeOptions = {
@@ -51,4 +52,11 @@ export async function activateAndConsent(user: TestUser) {
       .send({ consentTypeId: type.id, decision: 'GRANTED' })
       .expect(201);
   }
+}
+
+/** Fully onboarded patient with an assigned plan (skips the baseline questionnaire). */
+export async function startTreatment(user: TestUser, baselineScore = 20) {
+  await activateAndConsent(user);
+  const { id } = await prisma.user.findUniqueOrThrow({ where: { email: user.email } });
+  return prisma.$transaction((tx) => assignTreatment(id, baselineScore, tx));
 }
