@@ -28,3 +28,4 @@ backend/coverage/
 backend/storage/
 *.log
 
+storage-test
