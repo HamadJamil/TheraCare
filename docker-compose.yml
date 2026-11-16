@@ -1,0 +1,34 @@
+# Local development services only (synthetic data). Not a deployment configuration.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: theracare-postgres
+    environment:
+      POSTGRES_USER: theracare
+      POSTGRES_PASSWORD: theracare
+      POSTGRES_DB: theracare
+    ports:
+      - "5433:5432"
+    volumes:
+      - theracare-pg:/var/lib/postgresql/data
+      - ./backend/scripts/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U theracare"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: theracare-redis
+    ports:
+      - "6380:6379"
+
+  mailpit:
+    image: axllent/mailpit:v1.20
+    container_name: theracare-mailpit
+    ports:
+      - "1026:1025" # SMTP
+      - "8026:8025" # Web UI
+
+volumes:
+  theracare-pg:
