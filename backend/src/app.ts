@@ -7,6 +7,7 @@ import { logger } from './config/logger';
 import { requestId } from './middleware/request-id';
 import { errorHandler, notFoundHandler } from './middleware/error-handler';
 import { ok } from './common/http';
+import { docsRouter } from './docs';
 
 export type RouteModule = { path: string; router: Router };
 
@@ -36,6 +37,7 @@ export function createApp(modules: RouteModule[]): Express {
   );
 
   app.get('/health', (_req, res) => ok(res, { status: 'ok' }));
+  app.use('/api/docs', docsRouter());
   for (const { path, router } of modules) app.use(`/api/v1${path}`, router);
 
   app.use(notFoundHandler);
