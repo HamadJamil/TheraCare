@@ -10,6 +10,7 @@ import { patientsRouter } from './modules/patients/patients.routes';
 import { progressRouter } from './modules/progress/progress.routes';
 import { questionnairesRouter } from './modules/questionnaires/questionnaires.routes';
 import { reportsRouter } from './modules/reports/reports.routes';
+import { supportRouter } from './modules/support/support.routes';
 import { syncRouter } from './modules/sync/sync.routes';
 import { trackingRouter } from './modules/tracking/tracking.routes';
 import { treatmentsRouter } from './modules/treatments/treatments.routes';
@@ -29,5 +30,6 @@ export const routeModules: RouteModule[] = [
   { path: '', router: treatmentsRouter },
   { path: '', router: assessmentsRouter },
   { path: '', router: reportsRouter },
+  { path: '', router: supportRouter },
   { path: '', router: auditRouter },
 ];
